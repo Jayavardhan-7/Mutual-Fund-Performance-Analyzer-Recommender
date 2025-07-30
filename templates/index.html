@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutual Fund Performance Analyzer & Risk-Based Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Mutual Fund Performance Analyzer & Risk-Based Recommender</h1>
+        <form action="/analyze" method="post">
+            <label for="fund_name">Enter Mutual Fund Name:</label>
+            <input type="text" id="fund_name" name="fund_name" required>
+            <button type="submit">Analyze Performance</button>
+        </form>
+        <hr>
+        <h2>Risk-Based Recommender</h2>
+        <form action="/recommend" method="post">
+            <label for="risk_tolerance">Select Your Risk Tolerance:</label>
+            <select id="risk_tolerance" name="risk_tolerance">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+            <button type="submit">Get Recommendations</button>
+        </form>
+        <div id="results">
+            {% if analysis_results %}
+            <h2>Analysis Results for {{ analysis_results.fund_name }}</h2>
+            <p><strong>Performance:</strong> {{ analysis_results.performance }}</p>
+            <p><strong>Risk Rating:</strong> {{ analysis_results.risk_rating }}</p>
+            <p><strong>Details:</strong> {{ analysis_results.details }}</p>
+            {% endif %}
+
+            {% if recommendations %}
+            <h2>Recommendations for {{ recommendations.risk_tolerance }} Risk Tolerance</h2>
+            <ul>
+                {% for fund in recommendations.funds %}
+                <li>
+                    <strong>{{ fund.name }}</strong> ({{ fund.type }})<br>
+                    Expected Return: {{ fund.expected_return }}<br>
+                    Risk: {{ fund.risk }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
